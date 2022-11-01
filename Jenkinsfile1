@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    tools{
+        maven 'local_maven'
+    }
+    parameters{
+        string(name: 'tomcat_staging', defaultvalue: '44.203.92.174',description: 'Remote staging server')
+        string(name: 'tomcat_production',defaultValue: '44.212.69.14',description:'Remote production server')
+    }
+    
+    stages {
+        stage('clean the project') {
+            steps {
+                sh 'mvn clean'
+            }
+        }
+        stage("Build the project"){
+            steps {
+                sh ' mvn build package'
+            }
+            post {
+                success {
+                    echo "Archieving the Artifact"
+                    archiveArtifacts Artifacts: '**/target/*.war'
+                }
+                }
+        }
+        stage("deploying stage"){
+            parallel{
+                stage("deploying on staging server"){
+                    steps{
+                        sh "scp **/*.war jenkins@${params.tomcat_staging}:/usr/share/tomcat/webapps/"
+                    }                    
+                }
+                stage("deploying on production server"){
+                    steps{
+                        sh "scp **/*.war jenkins@${params.tomcat_production}:/usr/share/tomcat/webapps/"
+                    }
+                }
+
+            }
+
+        }
+    }
+    
+}
