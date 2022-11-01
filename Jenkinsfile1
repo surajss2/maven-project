@@ -4,7 +4,7 @@ pipeline {
         maven 'M2_MAVEN'
     }
     parameters{
-        string(name: 'tomcat_staging', defaultvalue: '44.203.92.174',description: 'Remote staging server')
+        string(name: 'tomcat_staging', defaultValue: '44.203.92.174',description: 'Remote staging server')
         string(name: 'tomcat_production',defaultValue: '44.212.69.14',description:'Remote production server')
     }
     
