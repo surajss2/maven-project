@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools{
-        maven 'local_maven'
+        maven 'M2_MAVEN'
     }
     parameters{
         string(name: 'tomcat_staging', defaultvalue: '44.203.92.174',description: 'Remote staging server')
